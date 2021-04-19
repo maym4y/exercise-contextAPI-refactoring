@@ -2,15 +2,16 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
+import { trafficContext } from './App';
 import carBlue from './images/carBlue.jpeg';
 import carRed from './images/carRed.jpeg';
 import carYellow from './images/carYellow.jpeg';
-import { moveCar } from './redux/actionCreators';
 
-function Cars({ redCar, blueCar, yellowCar, moveCar }) {
-  return (
-    <div>
+function Cars() {
+return (
+  <trafficContext.Consumer>
+    {({ redCar, blueCar, yellowCar, moveCar, signalColor }) => (
+  <div>
       <div>
         <img
           className={redCar ? 'car-right' : 'car-left'}
@@ -20,6 +21,7 @@ function Cars({ redCar, blueCar, yellowCar, moveCar }) {
         <button
           onClick={() => moveCar('red', !redCar)}
           type="button"
+          disabled={ signalColor === 'red' }
         >
           Move
         </button>
@@ -33,6 +35,7 @@ function Cars({ redCar, blueCar, yellowCar, moveCar }) {
         <button
           onClick={() => moveCar('blue', !blueCar)}
           type="button"
+          disabled={ signalColor === 'red' }
         >
           Move
         </button>
@@ -46,12 +49,15 @@ function Cars({ redCar, blueCar, yellowCar, moveCar }) {
         <button
           onClick={() => moveCar('yellow', !yellowCar)}
           type="button"
+          disabled={ signalColor === 'red' }
         >
           Move
         </button>
       </div>
     </div>
-  );
+  )
+}
+</trafficContext.Consumer>)
 }
 
 Cars.propTypes = {
@@ -59,13 +65,7 @@ Cars.propTypes = {
   blueCar: PropTypes.bool.isRequired,
   redCar: PropTypes.bool.isRequired,
   yellowCar: PropTypes.bool.isRequired,
+  signalColor: PropTypes.string.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  redCar: state.carReducer.cars.red,
-  blueCar: state.carReducer.cars.blue,
-  yellowCar: state.carReducer.cars.yellow});
-
-const mapDispatchToProps = { moveCar };
-
-export default connect(mapStateToProps, mapDispatchToProps)(Cars);
+export default Cars;
